@@ -24,7 +24,8 @@ Backup flickr's picture which in page/post External links to flickr's picture. w
 == Screenshots ==
 
 Steps
-1.setting page
+
+1. setting page
 2.uncheck "Change flickr's picture external links to internal links"
-3.check "Change flickr's picture external links to internal links"
+3.checked "Change flickr's picture external links to internal links"
 
