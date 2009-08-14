@@ -4,13 +4,21 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: page, flickr, images, picture, backup,
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 0.5
+Stable tag: 0.6
 
 Backup flickr's picture which in page/post External links to flickr's picture.you can change the external links of flickr's picture to internal links.
 
 == Description ==
 
-Backup flickr's picture which in page/post External links to flickr's picture. when flickr change the privacy or stop the service,you can change the external links of flickr's picture to internal links.for example: &lt;img src="http://farm4.static.flickr.com/3456/3404575364_aea19a9ab3_s.jpg" /&gt; change to &lt;img src="http://yourdomain/wp-content/uploads/flickr_backup/3404575364_aea19a9ab3_s.jpg" /&gt;
+Backup flickr's picture which in page/post External links to flickr's picture. when flickr change the privacy or stop the service,you can change the external links of flickr's picture to internal links.for example:
+ &lt;img src="http://farm4.static.flickr.com/3456/3404575364_aea19a9ab3_s.jpg" /&gt; 
+ change to 
+ &lt;img src="http://yourdomain/wp-content/uploads/flickr_backup/3404575364_aea19a9ab3_s.jpg" /&gt;
+ 0.6 version update:
+ 1. add support &lt;a&gt; link href change,easy to support some lightbox plugins.
+ &lt;a href="http://farm4.static.flickr.com/3456/3404575364_aea19a9ab3_s.jpg" &gt; 
+ change to 
+ &lt;a href="http://yourdomain/wp-content/uploads/flickr_backup/3404575364_aea19a9ab3_s.jpg" &gt;
 
 == Installation ==
 

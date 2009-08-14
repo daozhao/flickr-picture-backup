@@ -3,12 +3,12 @@
  * Plugin Name: flickr picture backup
  * Plugin URI: http://daozhao.goflytoday.com/flickr-picture-backup-plugin-for-wordpress-plugin/
  * Description: Backup flickr's picture which in page/post External links to flickr's picture.you can change the external links of flickr's picture to internal links.
- * Version: 0.5
+ * Version: 0.6
  * Author: daozhao chen 
  * Author URI: http://daozhao.goflytoday.com
  *
  * @copyright 2009
- * @version 0.5
+ * @version 0.6
  * @author daozhao chen
  * @link http://daozhao.goflytoday.com/
  * @license 
@@ -16,6 +16,7 @@
  */
 
 add_filter('the_content', 'wp_daozhao_flickr_picture_repalce');
+add_filter('the_excerpt', 'wp_daozhao_flickr_picture_repalce');
 
 function wp_daozhao_flickr_picture_repalce($content=""){
 	$wp_option = get_option("wp_daozhao_flickr_picture_backup");
@@ -23,8 +24,19 @@ function wp_daozhao_flickr_picture_repalce($content=""){
 	if ( $wp_ref )
     {
         $http_path = wp_daozhao_flickr_backup_urlpath();
-        $content = preg_replace('/<img(.*?)src="http:\/\/(.+?)\.static\.flickr\.com\/(.+?)\/(.+?)"(.*?)\/>/'
-                             ,'<img \\1 src="' . $http_path . '\\4"  \\5 />'
+        /*
+         preg_match_all('/<img.+?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?\/>/',$content,$rt);
+         preg_match_all('/<a.+?href="(http:\/\/farm.+?\.static\.flickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
+         preg_match_all('/<a.+?rev=".+?href:\'(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)\'.+?".*?>/',$content,$rt);
+        */
+        $content = preg_replace(array('/<img(.+?)src="http:\/\/(.+?)\.static\.flickr\.com\/(.+?)\/(.+?)"(.*?)>/'
+                                      ,'/<a(.+?)href="http:\/\/(farm.+?)\.static\.flickr\.com\/(.+?)\/(.+?)"(.*?)>/'
+                                      ,'/<a(.+?)rev="(.*?)href:\'http:\/\/(.+?)\.static\.flickr\.com\/(.+?)\/(.+?)\'(.*?)"(.*?)>/'
+                                     )
+                             ,array('<img \\1 src="' . $http_path . '\\4"  \\5>'
+                                    ,'<a \\1 href="' . $http_path . '\\4"  \\5>'
+                                    ,'<a \\1 rev="\\2href:\'' . $http_path . '\\5\'\\6" \\7>'
+                                   )
                              //,'<img \\1 src="/\\2_\\3_\\4"  \\5 />'
                              ,$content);
     }
@@ -62,11 +74,26 @@ function wp_daozhao_get_flickr_picture_list()
                         setup_postdata($post);
                         $title = apply_filters('the_title_rss', $post->post_title);
                         $content = apply_filters('the_content_export', $post->post_content);
-                        preg_match_all('/<img.*?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?\/>/',$content,$rt);
-                        if ( count($rt[1]) > 0 )
+                        $url_ary = array();
+                        
+                        /*
+                        preg_match_all('/<img.+?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?\/>/',$content,$rt);
+                        */
+                        preg_match_all('/<img.+?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+                        
+                        preg_match_all('/<a.+?href="(http:\/\/farm.+?\.static\.flickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+                        
+                        preg_match_all('/<a.+?rev=".*?href:\'(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)\'.*?".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+                        
+                        //print_r($rt);
+                       // if ( count($rt[1]) > 0 )
+                        if ( count($url_ary) > 0 )
                         {
                             //echo $title . "<br/>\r\n";
-                            foreach ( $rt[1] as $flickr_url )
+                            foreach ( $url_ary as $flickr_url )
                             {
                                 //echo $i++ . " " . $flickr_url . "<br/>\r\n";
                                 $flickr_url_ary[] = array( "url" => $flickr_url
