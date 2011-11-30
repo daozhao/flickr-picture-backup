@@ -4,11 +4,17 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: page, flickr, images, picture, backup,
 Requires at least: 2.7
 Tested up to: 2.7.1
-Stable tag: 0.6
+Stable tag: 0.7
 
 Backup flickr's picture which in page/post External links to flickr's picture.you can change the external links of flickr's picture to internal links.
 
 == Description ==
+version 0.6:
+First version for this plugin.
+
+version 0.7:
+Fixbug for flickr have new domain (staticflickr.com).
+Fixbug for https for admin login.this plugin cannot download the picture.
 
 Backup flickr's picture which in page/post External links to flickr's picture. when flickr change the privacy or stop the service,you can change the external links of flickr's picture to internal links.for example:
  &lt;img src="http://farm4.static.flickr.com/3456/3404575364_aea19a9ab3_s.jpg" /&gt; 

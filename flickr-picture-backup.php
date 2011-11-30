@@ -3,12 +3,12 @@
  * Plugin Name: flickr picture backup
  * Plugin URI: http://daozhao.goflytoday.com/flickr-picture-backup-plugin-for-wordpress-plugin/
  * Description: Backup flickr's picture which in page/post External links to flickr's picture.you can change the external links of flickr's picture to internal links.
- * Version: 0.6
+ * Version: 0.7
  * Author: daozhao chen 
  * Author URI: http://daozhao.goflytoday.com
  *
- * @copyright 2009
- * @version 0.6
+ * @copyright 2011
+ * @version 0.7
  * @author daozhao chen
  * @link http://daozhao.goflytoday.com/
  * @license 
@@ -29,6 +29,7 @@ function wp_daozhao_flickr_picture_repalce($content=""){
          preg_match_all('/<a.+?href="(http:\/\/farm.+?\.static\.flickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
          preg_match_all('/<a.+?rev=".+?href:\'(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)\'.+?".*?>/',$content,$rt);
         */
+		//macth this style : http://farm7.static.flickr.com/6118/6234551388_b7084b55c0.jpg
         $content = preg_replace(array('/<img(.+?)src="http:\/\/(.+?)\.static\.flickr\.com\/(.+?)\/(.+?)"(.*?)>/'
                                       ,'/<a(.+?)href="http:\/\/(farm.+?)\.static\.flickr\.com\/(.+?)\/(.+?)"(.*?)>/'
                                       ,'/<a(.+?)rev="(.*?)href:\'http:\/\/(.+?)\.static\.flickr\.com\/(.+?)\/(.+?)\'(.*?)"(.*?)>/'
@@ -39,7 +40,20 @@ function wp_daozhao_flickr_picture_repalce($content=""){
                                    )
                              //,'<img \\1 src="/\\2_\\3_\\4"  \\5 />'
                              ,$content);
-    }
+		
+		//macth this style : http://farm8.staticflickr.com/7144/6386744333_e123761678.jpg
+		
+		$content = preg_replace(array('/<img(.+?)src="http:\/\/(.+?)\.staticflickr\.com\/(.+?)\/(.+?)"(.*?)>/'
+                                      ,'/<a(.+?)href="http:\/\/(farm.+?)\.staticflickr\.com\/(.+?)\/(.+?)"(.*?)>/'
+                                      ,'/<a(.+?)rev="(.*?)href:\'http:\/\/(.+?)\.staticflickr\.com\/(.+?)\/(.+?)\'(.*?)"(.*?)>/'
+                                     )
+                             ,array('<img \\1 src="' . $http_path . '\\4"  \\5>'
+                                    ,'<a \\1 href="' . $http_path . '\\4"  \\5>'
+                                    ,'<a \\1 rev="\\2href:\'' . $http_path . '\\5\'\\6" \\7>'
+                                   )
+                             //,'<img \\1 src="/\\2_\\3_\\4"  \\5 />'
+                             ,$content);
+		    }
     
 	return $content;
 }
@@ -79,6 +93,7 @@ function wp_daozhao_get_flickr_picture_list()
                         /*
                         preg_match_all('/<img.+?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?\/>/',$content,$rt);
                         */
+						//macth this style : http://farm7.static.flickr.com/6118/6234551388_b7084b55c0.jpg
                         preg_match_all('/<img.+?src="(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
                         $url_ary = array_unique(array_merge($url_ary,$rt[1]));
                         
@@ -87,8 +102,18 @@ function wp_daozhao_get_flickr_picture_list()
                         
                         preg_match_all('/<a.+?rev=".*?href:\'(http:\/\/.+?\.static\.flickr\.com\/.+?\/.+?)\'.*?".*?>/',$content,$rt);
                         $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+						
+						//macth this style : http://farm8.staticflickr.com/7144/6386744333_e123761678.jpg
+                        preg_match_all('/<img.+?src="(http:\/\/.+?\.staticflickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
                         
-                        //print_r($rt);
+                        preg_match_all('/<a.+?href="(http:\/\/farm.+?\.staticflickr\.com\/.+?\/.+?)".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+                        
+                        preg_match_all('/<a.+?rev=".*?href:\'(http:\/\/.+?\.staticflickr\.com\/.+?\/.+?)\'.*?".*?>/',$content,$rt);
+                        $url_ary = array_unique(array_merge($url_ary,$rt[1]));
+						
+						//print_r($rt);
                        // if ( count($rt[1]) > 0 )
                         if ( count($url_ary) > 0 )
                         {
@@ -383,7 +408,7 @@ function _flickr_picture_backup_row( $tag, $class = '' ) {
 					$attributes = 'class="comments column-comments"' . $style;
 					//$attributes = 'class="post-title column-title"' . $style;
 					$out .= "<td $attributes><img id=\"sts_img_" . $picture_id . '" src="'
-                            . get_option("siteurl") .   '/wp-admin/images/'
+                            . site_url('') .   '/wp-admin/images/'
                             . ($picture_exists ? "yes.png" : "no.png") . '" /></td>';
 					break;
 			}
@@ -439,7 +464,7 @@ function wp_daozhao_flickr_picture_backup_warning()
 				<li>'.__('Reload this page').'</li>
 				<li>'.__('Click the Stop or Back buttons in your browser').'</li>
 			</ol>
-            <p>please wait...<img src="' . get_option("siteurl") .   '/wp-admin/images/loading-publish.gif" /></P>
+            <p>please wait...<img src="' . site_url('') .   '/wp-admin/images/loading-publish.gif" /></P>
             </div>';    
     
 }
@@ -552,7 +577,7 @@ function wp_daozhao_flickr_picture_backup_options()
 <img alt="" border="0" src="https://www.paypal.com/zh_XC/i/scr/pixel.gif" width="1" height="1">
 </form>
 
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=<?php echo basename(__FILE__); ?>&pagenum=<?php echo (isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1); ?>">
+    <form method="post" action="<?php echo site_url('') . '/wp-admin/options-general.php' ?><?php //echo $_SERVER['PHP_SELF']; ?>?page=<?php echo basename(__FILE__); ?>&pagenum=<?php echo (isset( $_GET['pagenum'] ) ? absint( $_GET['pagenum'] ) : 1); ?>">
     <input type="checkbox" <?php $wp_option = get_option("wp_daozhao_flickr_picture_backup"); echo $wp_option["ref"]=="yes" ? 'checked="ture"' : ''; ?> name="autoref" value="yes" />
     <?php _e("Change flickr's picture external links to internal links"); ?>
     <input type="submit" value="<?php _e('Save Changes'); ?>" name="savechanges" id="savechanges" class="button-secondary action" />
@@ -671,25 +696,25 @@ $(document).ready(function(){
                                     {
                                     //$("#tr_" + tr_id).show();
                                         $("#tr_" + tr_id).show();
-                                        $("#sts_img_" + tr_id).attr("src","<?php echo get_option("siteurl") .   '/wp-admin/images/loading-publish.gif' ?>");
+                                        $("#sts_img_" + tr_id).attr("src","<?php echo site_url('') .   '/wp-admin/images/loading-publish.gif' ?>");
                                         alink = $(this);
                                         alink_str = $(this).html();
                                         $(this).html("Loading...");
-                                        $.post("<?php echo get_option('siteurl').'/wp-content/plugins/flickr-picture-backup/flickr-picture-download.php'; ?>"
+                                        $.post("<?php echo site_url('') .'/wp-content/plugins/flickr-picture-backup/flickr-picture-download.php'; ?>"
                                                ,{"url": url}
                                                ,function(data)
                                                 {
                                                     alink.html(alink_str);
                                                     if ( data.substr(0,2) == "OK" )
                                                     {
-                                                        $("#sts_img_" + tr_id).attr("src","<?php echo get_option("siteurl") .   '/wp-admin/images/yes.png' ?>");
+                                                        $("#sts_img_" + tr_id).attr("src","<?php echo site_url('')  .   '/wp-admin/images/yes.png' ?>");
                                                         imgcontent = '<div class="alignleft actions"><img src="' + data.substr(3) + '" /></div>';
                                                         //imgcontent = '<img src="' + data.substr(3) + '" />';
                                                         $("#td_" + tr_id ).html(imgcontent);
                                                     }
                                                     else
                                                     {
-                                                        $("#sts_img_" + tr_id).attr("src","<?php echo get_option("siteurl") .   '/wp-admin/images/no.png' ?>");
+                                                        $("#sts_img_" + tr_id).attr("src","<?php echo site_url('') .   '/wp-admin/images/no.png' ?>");
                                                         alert("Download error.\r\n" + data);
                                                     }
                                                     //alert(tr_id + " \r\n" + data);
@@ -704,7 +729,7 @@ $(document).ready(function(){
                                     
                                });
         $('#get-bg-info').click(function(){
-                                    $.get("<?php echo get_option('siteurl').'/wp-content/plugins/flickr-picture-backup/backup-bg.log'; ?>"
+                                    $.get("<?php echo site_url('') .'/wp-content/plugins/flickr-picture-backup/backup-bg.log'; ?>"
                                           ,function(data)
                                             {
                                                 $('#bg-info').html(data);
