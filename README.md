@@ -3,8 +3,8 @@ Contributors: daozhao chen
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5855418
 Tags: page, flickr, images, picture, backup,
 Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: 0.7
+Tested up to: 3.9.1
+Stable tag: 0.9
 
 Backup flickr's picture which in page/post External links to flickr's picture.you can change the external links of flickr's picture to internal links.
 
