@@ -19,6 +19,9 @@ add_filter('the_content', 'wp_daozhao_flickr_picture_repalce');
 add_filter('the_excerpt', 'wp_daozhao_flickr_picture_repalce');
 
 function wp_daozhao_flickr_picture_repalce($content=""){
+    if ( is_preview() ) {
+        return $content;
+    }
 	$wp_option = get_option("wp_daozhao_flickr_picture_backup");
 	$wp_ref = ($wp_option["ref"] == 'yes') ? 1 : 0;
 	if ( $wp_ref )
